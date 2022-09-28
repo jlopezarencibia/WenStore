@@ -1,6 +1,6 @@
-import { TestBed, inject } from '@angular/core/testing';
+import {TestBed, inject} from '@angular/core/testing';
 
-import { AuthorizeInterceptor } from './authorize.interceptor';
+import {AuthorizeInterceptor} from './authorize.interceptor';
 
 describe('AuthorizeInterceptor', () => {
   beforeEach(() => {
