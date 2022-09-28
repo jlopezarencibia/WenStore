@@ -1,0 +1,12 @@
+<div>
+    <form ngForm class="d-flex flex-column flex-lg-row">
+      <div class="mb-3 flex-grow-1 me-lg-3">
+        <label for="ItemLink" class="form-label">Enlace de SHEIN</label>
+        <input type="text" class="form-control form-control-lg" name="ItemLink" id="ItemLink" placeholder="URL del artículo de SHEIN">
+      </div>
+      <div class="mb-3">
+        <label for="ItemAmount" class="form-label">Cantidad</label>
+        <input type="number" [min]="1" class="form-control form-control-lg" name="ItemAmount" id="ItemAmount" placeholder="Cantidad">
+      </div>
+    </form>
+</div>

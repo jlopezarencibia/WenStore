@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WenStore.Data;
 
@@ -10,9 +11,10 @@ using WenStore.Data;
 namespace WenStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220923200129_AddinitialEntitiesWithoutRelations")]
+    partial class AddinitialEntitiesWithoutRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.8");
@@ -298,9 +300,6 @@ namespace WenStore.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("CartId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -375,8 +374,6 @@ namespace WenStore.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -393,7 +390,7 @@ namespace WenStore.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("ContactInformationId")
+                    b.Property<int>("ContactInformationId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
@@ -426,7 +423,7 @@ namespace WenStore.Data.Migrations
 
             modelBuilder.Entity("WenStore.Models.Services.OpenForWork", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -481,7 +478,7 @@ namespace WenStore.Data.Migrations
 
             modelBuilder.Entity("WenStore.Models.Shared.ContactInformation", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -535,7 +532,7 @@ namespace WenStore.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("OpenForWorkId")
+                    b.Property<int?>("OpenForWorkId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Score")
@@ -585,9 +582,6 @@ namespace WenStore.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ApplicationUserId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.ToTable("STORE.Carts");
@@ -617,8 +611,11 @@ namespace WenStore.Data.Migrations
                     b.Property<long?>("CartId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("CategoryId")
-                        .HasColumnType("REAL");
+                    b.Property<long?>("CartId1")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("DeliversTo")
                         .IsRequired()
@@ -652,7 +649,9 @@ namespace WenStore.Data.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("CartId1");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("SavedId");
 
@@ -769,17 +768,6 @@ namespace WenStore.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WenStore.Models.Application.ApplicationUser", b =>
-                {
-                    b.HasOne("WenStore.Models.Store.Cart", "Cart")
-                        .WithMany()
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cart");
-                });
-
             modelBuilder.Entity("WenStore.Models.Services.Job", b =>
                 {
                     b.HasOne("WenStore.Models.Shared.ContactInformation", "ContactInformation")
@@ -826,9 +814,21 @@ namespace WenStore.Data.Migrations
                         .WithMany("Products")
                         .HasForeignKey("CartId");
 
+                    b.HasOne("WenStore.Models.Store.Cart", null)
+                        .WithMany("SavedForLater")
+                        .HasForeignKey("CartId1");
+
+                    b.HasOne("WenStore.Models.Store.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WenStore.Models.Store.Saved", null)
                         .WithMany("Products")
                         .HasForeignKey("SavedId");
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("WenStore.Models.Store.Service", b =>
@@ -854,6 +854,8 @@ namespace WenStore.Data.Migrations
             modelBuilder.Entity("WenStore.Models.Store.Cart", b =>
                 {
                     b.Navigation("Products");
+
+                    b.Navigation("SavedForLater");
                 });
 
             modelBuilder.Entity("WenStore.Models.Store.Saved", b =>

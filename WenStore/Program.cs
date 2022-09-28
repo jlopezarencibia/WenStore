@@ -3,39 +3,48 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using WenStore.Data;
-using WenStore.Models;
+using WenStore.Models.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+		options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+		.AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+		.AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
 builder.Services.AddAuthentication()
-    .AddIdentityServerJwt();
+		.AddIdentityServerJwt();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+// Add Swagger
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint();
+	app.UseMigrationsEndPoint();
+	// Add Swagger
+	app.UseSwagger();
+	app.UseSwaggerUI(options =>
+	{
+		options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+	});
 }
 else
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+	app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -47,11 +56,11 @@ app.UseIdentityServer();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+		name: "default",
+		pattern: "{controller}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-app.MapFallbackToFile("index.html");;
+app.MapFallbackToFile("index.html"); ;
 
 app.Run();
 
