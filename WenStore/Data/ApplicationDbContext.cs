@@ -6,6 +6,8 @@ using WenStore.Models.Application;
 using WenStore.Models.Services;
 using WenStore.Models.Shared;
 using WenStore.Models.Store;
+using WenStore.Models.Store.Category;
+using WenStore.Models.Store.Product;
 
 namespace WenStore.Data;
 
@@ -38,5 +40,12 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
   public ApplicationDbContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions)
     : base(options, operationalStoreOptions)
   {
+    
+  }
+  protected override void OnModelCreating(ModelBuilder builder)
+  {
+    builder.Entity<Category>().HasQueryFilter(e => !e.IsDeleted);
+    builder.Entity<AmazonProduct>().HasQueryFilter(e => !e.IsDeleted);
+    base.OnModelCreating(builder);
   }
 }

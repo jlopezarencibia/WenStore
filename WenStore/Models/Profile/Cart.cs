@@ -12,7 +12,7 @@ namespace WenStore.Models.Store
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public long Id { get; set; }
 
-    public List<Product> Products { get; set; } = new List<Product>();
+    public List<Product.Product> Products { get; set; } = new List<Product.Product>();
 
     [ForeignKey(nameof(ApplicationUser))] public int ApplicationUserId { get; set; }
   }

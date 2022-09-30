@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WenStore.Data;
-using WenStore.Models.Store;
+using WenStore.Models.Store.Category;
+using WenStore.Models.Store.Product;
 
 namespace WenStore.Controllers
 {
@@ -16,7 +17,6 @@ namespace WenStore.Controllers
       _context = context;
     }
 
-    // GET: api/GetAllCategories
     [HttpGet("GetAllCategories")]
     public async Task<ActionResult<IEnumerable<Category>>> GetAllCategories()
     {
@@ -25,8 +25,7 @@ namespace WenStore.Controllers
       return new ObjectResult(result) { StatusCode = StatusCodes.Status200OK };
     }
 
-    // GET: api/GetCategoryWithProducts/5
-    [HttpGet("GetCategoryWithProducts/{id}")]
+    [HttpGet("GetCategoryWithData/{id}")]
     public async Task<ActionResult<CategoryDto>> GetCategoryWithProducts(long id)
     {
       var category = await _context.Categories.FindAsync(id);
@@ -76,15 +75,16 @@ namespace WenStore.Controllers
     }
 
     [HttpPost("CreateCategory")]
-    public async Task<ActionResult<Category>> PostCategory(CategoryMin category)
+    public async Task<ActionResult<Category>> CreateCategory(CategoryMin category)
     {
-      _context.Categories.Add(new Category(category));
+      var result = await _context.Categories.AddAsync(
+        new Category(category)
+      );
       await _context.SaveChangesAsync();
 
-      return new ObjectResult(category) { StatusCode = StatusCodes.Status201Created, };
+      return new ObjectResult(result.Entity) { StatusCode = StatusCodes.Status201Created, };
     }
 
-    // DELETE: api/Category/5
     [HttpDelete("DeleteCategory/{id}")]
     public async Task<IActionResult> DeleteCategory(long id)
     {
@@ -99,7 +99,17 @@ namespace WenStore.Controllers
         return NotFound();
       }
 
-      _context.Categories.Remove(category);
+      // foreach (var p in _context.Products)
+      // {
+      //   if (p.CategoryId == category.Id)
+      //   {
+      //     p.CategoryId = -1;
+      //   }
+      // }
+
+      // _context.Categories.Remove(category);
+      // _context.Entry(category).State = EntityState.Deleted;
+      category.IsDeleted = true;
       await _context.SaveChangesAsync();
 
       return NoContent();

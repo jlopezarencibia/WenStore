@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WenStore.Data;
 
@@ -10,9 +11,10 @@ using WenStore.Data;
 namespace WenStore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220928180601_NewFiledToProductAndCategory")]
+    partial class NewFiledToProductAndCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.8");
@@ -566,9 +568,6 @@ namespace WenStore.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -602,20 +601,9 @@ namespace WenStore.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("BackgroundColor")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("BackgroundImageRelativePath")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -631,8 +619,8 @@ namespace WenStore.Data.Migrations
                     b.Property<long?>("CartId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("CategoryId")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("CategoryId")
+                        .HasColumnType("REAL");
 
                     b.Property<float>("DealPrice")
                         .HasColumnType("REAL");
@@ -666,9 +654,6 @@ namespace WenStore.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Stock")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

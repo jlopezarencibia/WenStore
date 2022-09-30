@@ -11,7 +11,7 @@ public class Saved
   [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
   public long Id { get; set; }
 
-  public List<Product> Products { get; set; } = new List<Product>();
+  public List<Product.Product> Products { get; set; } = new List<Product.Product>();
   public List<Service> Services { get; set; } = new List<Service>();
   public List<Job> Jobs { get; set; } = new List<Job>();
   public List<OpenForWork> OpenForWorks { get; set; } = new List<OpenForWork>();
